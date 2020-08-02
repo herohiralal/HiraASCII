@@ -14,7 +14,7 @@ void CollisionWorld::DeregisterCollider(CollisionComponent& InComponent)
     {
         if (*I == &InComponent)
         {
-            Colliders.erase(I--);
+            Colliders.erase(I);
             return;
         }
     }

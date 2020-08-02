@@ -1,4 +1,6 @@
 ﻿#include "../Headers/RendererWorld.h"
+#include "../Headers/Camera.h"
+#include "../Headers/RendererComponent.h"
 
 void RendererWorld::RegisterRenderer(RendererComponent& InComponent)
 {
@@ -11,7 +13,7 @@ void RendererWorld::DeregisterRenderer(RendererComponent& InComponent)
     {
         if (*I == &InComponent)
         {
-            Renderers.erase(I--);
+            Renderers.erase(I);
             return;
         }
     }
@@ -19,5 +21,11 @@ void RendererWorld::DeregisterRenderer(RendererComponent& InComponent)
 
 std::vector<RendererComponent*> RendererWorld::GetRenderersOnCamera(const Camera& InCamera) const
 {
-    
+    auto RenderersOnCamera = std::vector<RendererComponent*>();
+
+    for (auto Renderer : Renderers)
+        if (InCamera.IntersectsWith(Renderer->GetRendererBounds()))
+            RenderersOnCamera.push_back(Renderer);
+
+    return RenderersOnCamera;
 }

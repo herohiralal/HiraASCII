@@ -9,11 +9,11 @@ World::World() : CollisionWorldComponent(*new CollisionWorld()), RendererWorldCo
 
 World::~World()
 {
-    delete &CollisionWorldComponent;
-    delete &RendererWorldComponent;
-
     for (auto I = 0; I < GameObjects.size(); I++)
         delete GameObjects[I];
+    
+    delete &CollisionWorldComponent;
+    delete &RendererWorldComponent;
 }
 
 GameObject* World::SpawnGameObject(const std::string InName)
@@ -38,16 +38,21 @@ void World::DespawnGameObject(GameObject& InTarget)
     }
 }
 
-void World::DespawnGameObject(const std::string InName, bool InAll)
+void World::DespawnGameObject(const std::string InName, const bool InAll)
 {
-    for (auto Current = GameObjects.begin(); Current != GameObjects.end(); ++Current)
+    auto Iterator = GameObjects.begin();
+    while(Iterator!=GameObjects.end())
     {
-        if ((*Current)->GetName() == InName)
+        if((*Iterator)->GetName() == InName)
         {
-            delete *Current;
-            GameObjects.erase(Current);
+            delete *Iterator;
+            GameObjects.erase(Iterator);
             NumberOfGameObjects--;
-            return;
+            if(!InAll) return;
+        }
+        else
+        {
+            ++Iterator;
         }
     }
 }

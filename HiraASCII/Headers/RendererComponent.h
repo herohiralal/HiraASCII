@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "Bounds.h"
 #include "Component.h"
 #include "RenderData.h"
@@ -17,6 +19,7 @@ private:
 public:
     // Commands
     void SetRenderData(RenderData* InRenderData, unsigned InSize);
+    void SetRenderData(std::string InText, unsigned InXCenter, unsigned InYCenter);
 
     // Queries
     unsigned GetSize() const;

@@ -27,6 +27,45 @@ void RendererComponent::SetRenderData(RenderData* InRenderData, const unsigned I
     Size = InSize;
 }
 
+void RendererComponent::SetRenderData(const std::string InText, const unsigned InXCenter, const unsigned InYCenter)
+{
+    if (Data != nullptr)
+    {
+        delete[] Data;
+        Size = 0;
+    }
+
+    unsigned ValidArraySize = 0;
+
+    for (auto I = 0; I < InText.size(); I++)
+        if (InText[I] != ' ' && InText[I] != '\n') ValidArraySize++;
+
+    Data = new RenderData[ValidArraySize];
+    Size = 0;
+
+    unsigned X = 0, Y = 0;
+
+    for (auto I = 0; I < InText.size(); I++)
+    {
+        switch (InText[I])
+        {
+        case ' ':
+            X++;
+            break;
+        case '\n':
+            X = 0;
+            Y--;
+            break;
+        default:
+            Data[Size].Position.Set(X - InXCenter, Y + InYCenter);
+            Data[Size].Denotation = InText[I];
+            X++;
+            Size++;
+            break;
+        }
+    }
+}
+
 unsigned RendererComponent::GetSize() const
 {
     return Size;
