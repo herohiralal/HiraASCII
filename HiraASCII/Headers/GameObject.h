@@ -21,6 +21,7 @@ private:
     std::string Name;
     std::vector<Component*> Components;
     TransformComponent& Transform;
+    bool MarkedForDestruction = false;
 
 public:
     // Commands
@@ -30,6 +31,8 @@ public:
     void RemoveComponent(bool InAll = false);
     void PreCollisionTick();
     void PostCollisionTick();
+    void Destroy();
+    void GarbageCollect();
 
     // Queries
     ::World* GetWorld() const;
@@ -39,6 +42,7 @@ public:
     T* GetComponent() const;
     template <typename T>
     std::vector<T*> GetComponents() const;
+    bool IsMarkedForDestruction() const;
 };
 
 template <typename T>
@@ -99,17 +103,6 @@ void GameObject::RemoveComponent(const bool InAll)
         T* PotentialObject = dynamic_cast<T*>(*Current);
 
         if (PotentialObject != nullptr)
-        {
-            if ((*Current)->IsComponentABehaviour())
-                (*Current)->AsBehaviour()->Deactivate();
-
-            (*Current)->Decommission();
-
-            delete *Current;
-
-            Components.erase(Current--);
-
-            if (!InAll) return;
-        }
+            (*Current)->Destroy();
     }
 }

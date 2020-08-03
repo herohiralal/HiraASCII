@@ -1,9 +1,16 @@
 ﻿#include "../Headers/World.h"
+
+
+#include <ctime>
+
+#include "../Headers/Camera.h"
 #include "../Headers/CollisionWorld.h"
 #include "../Headers/GameObject.h"
+#include "../Headers/Input.h"
 #include "../Headers/RendererWorld.h"
 
-World::World() : CollisionWorldComponent(*new CollisionWorld()), RendererWorldComponent(*new RendererWorld())
+World::World() : CollisionWorldComponent(*new CollisionWorld()), RendererWorldComponent(*new RendererWorld()),
+                 CameraComponent(*new Camera()), InputComponent(*new Input())
 {
 }
 
@@ -14,8 +21,8 @@ World::~World()
 
     delete &CollisionWorldComponent;
     delete &RendererWorldComponent;
-
-    delete[] Input;
+    delete &CameraComponent;
+    delete &InputComponent;
 }
 
 GameObject* World::SpawnGameObject(const std::string InName)
@@ -26,39 +33,6 @@ GameObject* World::SpawnGameObject(const std::string InName)
     return SpawnedGameObject;
 }
 
-void World::DespawnGameObject(GameObject& InTarget)
-{
-    for (auto Current = GameObjects.begin(); Current != GameObjects.end(); ++Current)
-    {
-        if (*Current == &InTarget)
-        {
-            delete *Current;
-            GameObjects.erase(Current);
-            NumberOfGameObjects--;
-            return;
-        }
-    }
-}
-
-void World::DespawnGameObject(const std::string InName, const bool InAll)
-{
-    auto Iterator = GameObjects.begin();
-    while (Iterator != GameObjects.end())
-    {
-        if ((*Iterator)->GetName() == InName)
-        {
-            delete *Iterator;
-            GameObjects.erase(Iterator);
-            NumberOfGameObjects--;
-            if (!InAll) return;
-        }
-        else
-        {
-            ++Iterator;
-        }
-    }
-}
-
 void World::Quit()
 {
     Running = false;
@@ -66,19 +40,45 @@ void World::Quit()
 
 void World::PreCollisionTick() const
 {
-    for (auto GameObject : GameObjects)
-        GameObject->PreCollisionTick();
+    for(unsigned I = 0; I < NumberOfGameObjects; I++)
+        GameObjects[I]->PreCollisionTick();
 }
 
 void World::PostCollisionTick() const
 {
-    for (auto GameObject : GameObjects)
-        GameObject->PostCollisionTick();
+    for(unsigned I = 0; I < NumberOfGameObjects; I++)
+        GameObjects[I]->PostCollisionTick();
 }
 
-void World::Run()
+void World::GarbageCollect()
 {
-    
+    for(auto Iterator = GameObjects.begin(); Iterator != GameObjects.end();)
+    {
+        (*Iterator)->GarbageCollect();
+        if((*Iterator)->IsMarkedForDestruction())
+        {
+            delete *Iterator;
+            Iterator = GameObjects.erase(Iterator);
+            NumberOfGameObjects--;
+        }
+        else ++Iterator;
+    }
+}
+
+void World::Run(const int InFrameRate)
+{
+    InputComponent.ClearInput();
+    const auto Delay = 1 / InFrameRate;
+    const auto Start = time(nullptr);
+
+    do InputComponent.AcceptInput();
+    while (time(nullptr) - Start < Delay);
+
+    PreCollisionTick();
+    CollisionWorldComponent.Run();
+    PostCollisionTick();
+    GarbageCollect();
+    CameraComponent.Render(*this);
 }
 
 GameObject* World::GetGameObject(const std::string InName) const
@@ -109,6 +109,16 @@ CollisionWorld* World::GetCollisionWorld() const
 RendererWorld* World::GetRendererWorld() const
 {
     return &RendererWorldComponent;
+}
+
+Camera* World::GetCamera() const
+{
+    return &CameraComponent;
+}
+
+bool World::IsButtonPressed(const char InLetter) const
+{
+    return InputComponent.IsButtonPressed(InLetter);
 }
 
 bool World::IsRunning() const

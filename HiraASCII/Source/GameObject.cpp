@@ -23,14 +23,40 @@ void GameObject::PreCollisionTick()
 {
     for (auto Component : Components)
         if (Component->IsComponentABehaviour())
-            Component->AsBehaviour()->PreCollisionTick();
+            if (Component->AsBehaviour()->IsActivated())
+                Component->AsBehaviour()->PreCollisionTick();
 }
 
 void GameObject::PostCollisionTick()
 {
     for (auto Component : Components)
         if (Component->IsComponentABehaviour())
-            Component->AsBehaviour()->PostCollisionTick();
+            if (Component->AsBehaviour()->IsActivated())
+                Component->AsBehaviour()->PostCollisionTick();
+}
+
+void GameObject::Destroy()
+{
+    MarkedForDestruction = true;
+}
+
+void GameObject::GarbageCollect()
+{
+    for(auto Iterator = Components.begin();Iterator!=Components.end();)
+    {
+        if((*Iterator)->IsMarkedForDestruction())
+        {
+            if ((*Iterator)->IsComponentABehaviour())
+                (*Iterator)->AsBehaviour()->Deactivate();
+            
+            (*Iterator)->Decommission();
+            
+            delete *Iterator;
+            
+            Iterator = Components.erase(Iterator);
+        }
+        else ++Iterator;
+    }
 }
 
 ::World* GameObject::GetWorld() const
@@ -46,4 +72,9 @@ std::string GameObject::GetName() const
 TransformComponent* GameObject::GetTransform() const
 {
     return &Transform;
+}
+
+bool GameObject::IsMarkedForDestruction() const
+{
+    return MarkedForDestruction;
 }

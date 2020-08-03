@@ -13,6 +13,7 @@ public:
     
 private:
     GameObject& Owner;
+    bool MarkedForDestruction = false;
     
 public:
     virtual void Establish();
@@ -26,4 +27,6 @@ public:
     inline virtual bool IsComponentABehaviour() const;
 
     inline virtual Behaviour* AsBehaviour();
+    inline void Destroy();
+    bool IsMarkedForDestruction() const;
 };

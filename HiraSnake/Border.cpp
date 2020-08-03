@@ -1,0 +1,62 @@
+﻿#include "Border.h"
+#include "../HiraASCII/Headers/CollisionComponent.h"
+#include "../HiraASCII/Headers/GameObject.h"
+#include "../HiraASCII/Headers/RendererComponent.h"
+#include "../HiraASCII/Headers/World.h"
+
+GameObject* Border::Initialize(World& InWorld)
+{
+    auto SpawnedGameObject = InWorld.SpawnGameObject("Border");
+    SpawnedGameObject->AddComponent<RendererComponent>()->SetRenderData(
+        ""
+        "#############################################################\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#############################################################", 30, 11);
+    SpawnedGameObject->AddComponent<CollisionComponent>()->SetCollision(
+        ""
+        "#############################################################\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#                                                           #\n"
+        "#############################################################", 30, 11);
+    
+    return SpawnedGameObject;
+}

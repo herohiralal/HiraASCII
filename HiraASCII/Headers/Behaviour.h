@@ -19,7 +19,7 @@ public:
 
     inline Behaviour* AsBehaviour() final;
 
-    inline bool IsActivated() const;
+    bool IsActivated() const;
     
     void SetActivation(bool InValue);
 

@@ -32,3 +32,13 @@ Behaviour* Component::AsBehaviour()
 {
     return nullptr;
 }
+
+void Component::Destroy()
+{
+    MarkedForDestruction = true;
+}
+
+bool Component::IsMarkedForDestruction() const
+{
+    return MarkedForDestruction;
+}
