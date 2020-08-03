@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea/
 HiraASCII/x64/
+HiraSnake/x64/
 x64/
 *.vcxproj
 *.filters

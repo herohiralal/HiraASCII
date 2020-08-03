@@ -12,11 +12,25 @@ GameObject::~GameObject()
 {
     for (auto Component : Components)
     {
-        if(Component->IsComponentABehaviour())
+        if (Component->IsComponentABehaviour())
             static_cast<Behaviour*>(Component)->Deactivate();
         Component->Decommission();
         delete Component;
     }
+}
+
+void GameObject::PreCollisionTick()
+{
+    for (auto Component : Components)
+        if (Component->IsComponentABehaviour())
+            Component->AsBehaviour()->PreCollisionTick();
+}
+
+void GameObject::PostCollisionTick()
+{
+    for (auto Component : Components)
+        if (Component->IsComponentABehaviour())
+            Component->AsBehaviour()->PostCollisionTick();
 }
 
 ::World* GameObject::GetWorld() const

@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "Bounds.h"
 #include "Vector2.h"
 #include "Component.h"
@@ -17,6 +19,7 @@ private:
 public:
     // Commands
     void SetCollision(Vector2* InCollisions, unsigned InSize);
+    void SetCollision(std::string InText, unsigned InXCenter, unsigned InYCenter);
 
     // Queries
     unsigned GetSize() const;

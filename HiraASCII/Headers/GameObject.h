@@ -28,6 +28,8 @@ public:
     T* AddComponent(bool InAutoActivate = true);
     template <typename T>
     void RemoveComponent(bool InAll = false);
+    void PreCollisionTick();
+    void PostCollisionTick();
 
     // Queries
     ::World* GetWorld() const;

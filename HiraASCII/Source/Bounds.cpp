@@ -1,9 +1,8 @@
 ﻿#include "../Headers/Bounds.h"
-#include "../Headers/Vector2.h"
 
-Bounds::Bounds() : MinX(0), MinY(0), MaxX(0), MaxY(0)
-{
-}
+#include <iostream>
+
+#include "../Headers/Vector2.h"
 
 Bounds::Bounds(const int& InMinX, const int& InMinY, const int& InMaxX, const int& InMaxY) : MinX(InMinX), MinY(InMinY),
     MaxX(InMaxX), MaxY(InMaxY)
@@ -38,14 +37,14 @@ void Bounds::IncorporateIntoBounds(const Vector2& InVector2)
 
 void Bounds::IncorporateIntoBoundsHorizontally(const int InX)
 {
-    if(InX < MinX) MinX = InX;
-    else if (InX > MaxX) MaxX = InX;
+    if (InX < MinX) MinX = InX;
+    if (InX > MaxX) MaxX = InX;
 }
 
 void Bounds::IncorporateIntoBoundsVertically(const int InY)
 {
     if (InY < MinY) MinY = InY;
-    else if (InY > MaxY) MaxY = InY;
+    if (InY > MaxY) MaxY = InY;
 }
 
 bool Bounds::DoesNotIntersectWith(const Bounds& InOther) const
@@ -76,4 +75,10 @@ bool Bounds::IsVectorOutsideHorizontalBounds(const Vector2& InVector2) const
 bool Bounds::IsVectorOutsideVerticalBounds(const Vector2& InVector2) const
 {
     return InVector2.Y > MaxY || InVector2.Y < MinY;
+}
+
+void Bounds::PrintValue() const
+{
+    std::cout << "MinX: " << MinX << ", MaxX: " << MaxX <<
+        ", MinY: " << MinY << ", MaxY: " << MaxY << std::endl;
 }

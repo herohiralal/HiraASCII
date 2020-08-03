@@ -1,12 +1,13 @@
 ﻿#pragma once
+#include <climits>
+#include <string>
 
 struct Vector2;
 
 struct Bounds
 {
 public:
-    Bounds();
-    Bounds(const int& InMinX, const int& InMinY, const int& InMaxX, const int& InMaxY);
+   explicit Bounds(const int& InMinX = INT_MAX, const int& InMinY = INT_MAX, const int& InMaxX = INT_MIN, const int& InMaxY = INT_MIN);
 
     int MinX;
     int MinY;
@@ -28,4 +29,6 @@ public:
     bool IsVectorOutsideBounds(const Vector2& InVector2) const;
     bool IsVectorOutsideHorizontalBounds(const Vector2& InVector2) const;
     bool IsVectorOutsideVerticalBounds(const Vector2& InVector2) const;
+
+    void PrintValue() const;
 };

@@ -11,9 +11,11 @@ World::~World()
 {
     for (auto I = 0; I < GameObjects.size(); I++)
         delete GameObjects[I];
-    
+
     delete &CollisionWorldComponent;
     delete &RendererWorldComponent;
+
+    delete[] Input;
 }
 
 GameObject* World::SpawnGameObject(const std::string InName)
@@ -41,20 +43,42 @@ void World::DespawnGameObject(GameObject& InTarget)
 void World::DespawnGameObject(const std::string InName, const bool InAll)
 {
     auto Iterator = GameObjects.begin();
-    while(Iterator!=GameObjects.end())
+    while (Iterator != GameObjects.end())
     {
-        if((*Iterator)->GetName() == InName)
+        if ((*Iterator)->GetName() == InName)
         {
             delete *Iterator;
             GameObjects.erase(Iterator);
             NumberOfGameObjects--;
-            if(!InAll) return;
+            if (!InAll) return;
         }
         else
         {
             ++Iterator;
         }
     }
+}
+
+void World::Quit()
+{
+    Running = false;
+}
+
+void World::PreCollisionTick() const
+{
+    for (auto GameObject : GameObjects)
+        GameObject->PreCollisionTick();
+}
+
+void World::PostCollisionTick() const
+{
+    for (auto GameObject : GameObjects)
+        GameObject->PostCollisionTick();
+}
+
+void World::Run()
+{
+    
 }
 
 GameObject* World::GetGameObject(const std::string InName) const
@@ -85,4 +109,9 @@ CollisionWorld* World::GetCollisionWorld() const
 RendererWorld* World::GetRendererWorld() const
 {
     return &RendererWorldComponent;
+}
+
+bool World::IsRunning() const
+{
+    return Running;
 }

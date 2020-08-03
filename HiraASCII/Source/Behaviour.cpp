@@ -42,10 +42,10 @@ void Behaviour::Deactivate()
 {
 }
 
-void Behaviour::PreCollisionCallbackTick()
+void Behaviour::PreCollisionTick()
 {
 }
 
-void Behaviour::PostCollisionCallbackTick()
+void Behaviour::PostCollisionTick()
 {
 }

@@ -27,7 +27,7 @@ public:
 
     virtual void Deactivate();
 
-    virtual void PreCollisionCallbackTick();
+    virtual void PreCollisionTick();
 
-    virtual void PostCollisionCallbackTick();
+    virtual void PostCollisionTick();
 };

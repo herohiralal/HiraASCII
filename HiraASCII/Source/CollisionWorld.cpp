@@ -32,7 +32,7 @@ void CollisionWorld::Run() const
     for (auto TargetIndex = 0; TargetIndex < NumberOfColliders; TargetIndex++)
         for (auto QueryIndex = TargetIndex + 1; QueryIndex < NumberOfColliders; QueryIndex++)
         {
-            if (!ColliderBounds[TargetIndex].DoesNotIntersectHorizontallyWith(ColliderBounds[QueryIndex]))
+            if (!ColliderBounds[TargetIndex].DoesNotIntersectWith(ColliderBounds[QueryIndex]))
             {
                 if (AreCollidersColliding(*Colliders[TargetIndex], *Colliders[QueryIndex]))
                     HandleCollisionsBetween(*Colliders[TargetIndex], *Colliders[QueryIndex]);
@@ -73,7 +73,7 @@ bool CollisionWorld::AreCollidersColliding(const CollisionComponent& InComponent
 
     for (unsigned FirstIndex = 0; FirstIndex < FirstComponentSize; FirstIndex++)
     {
-        for (auto SecondIndex = FirstIndex + 1; SecondIndex < SecondComponentSize; SecondIndex++)
+        for (unsigned SecondIndex = 0; SecondIndex < SecondComponentSize; SecondIndex++)
         {
             if (InComponentFirst.GetCollisionData(FirstIndex).IsEqualTo(SecondCollider[SecondIndex]))
             {

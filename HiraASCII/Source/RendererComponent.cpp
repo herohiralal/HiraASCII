@@ -12,7 +12,7 @@ RendererComponent::RendererComponent(GameObject& InGo): Component(InGo)
 RendererComponent::~RendererComponent()
 {
     GetOwner()->GetWorld()->GetRendererWorld()->DeregisterRenderer(*this);
-    delete[] Data;
+    if (Data!=nullptr) delete[] Data;
 }
 
 void RendererComponent::SetRenderData(RenderData* InRenderData, const unsigned InSize)
@@ -43,7 +43,7 @@ void RendererComponent::SetRenderData(const std::string InText, const unsigned I
     Data = new RenderData[ValidArraySize];
     Size = 0;
 
-    unsigned X = 0, Y = 0;
+    auto X = 0, Y = 0;
 
     for (auto I = 0; I < InText.size(); I++)
     {

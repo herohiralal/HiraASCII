@@ -12,7 +12,7 @@ CollisionComponent::CollisionComponent(GameObject& InGo): Component(InGo)
 CollisionComponent::~CollisionComponent()
 {
     GetOwner()->GetWorld()->GetCollisionWorld()->DeregisterCollider(*this);
-    delete[] CollisionOffsets;
+    if (CollisionOffsets!=nullptr) delete[] CollisionOffsets;
 }
 
 void CollisionComponent::SetCollision(Vector2* InCollisions, const unsigned InSize)
@@ -25,6 +25,45 @@ void CollisionComponent::SetCollision(Vector2* InCollisions, const unsigned InSi
 
     CollisionOffsets = InCollisions;
     Size = InSize;
+}
+
+void CollisionComponent::SetCollision(const std::string InText, const unsigned InXCenter, const unsigned InYCenter)
+{
+    if (CollisionOffsets != nullptr)
+    {
+        delete[] CollisionOffsets;
+        Size = 0;
+    }
+
+    unsigned ValidArraySize = 0;
+
+    for (auto I = 0; I < InText.size(); I++)
+        if (InText[I] != ' ' && InText[I] != '\n')
+            ValidArraySize++;
+
+    CollisionOffsets = new Vector2[ValidArraySize];
+    Size = 0;
+
+    auto X = 0, Y = 0;
+
+    for (auto I = 0; I < InText.size(); I++)
+    {
+        switch (InText[I])
+        {
+        case ' ':
+            X++;
+            break;
+        case '\n':
+            X = 0;
+            Y--;
+            break;
+        default:
+            CollisionOffsets[Size].Set(X - InXCenter, Y + InYCenter);
+            X++;
+            Size++;
+            break;
+        }
+    }
 }
 
 unsigned CollisionComponent::GetSize() const
