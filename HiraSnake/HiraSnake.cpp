@@ -15,7 +15,7 @@ int main(int InArgc, char* InArgv[])
 
     while (CurrentWorld->IsRunning())
     {
-        CurrentWorld->Run(1);
+        CurrentWorld->Run(4);
         std::cout << "Current Score: " << CurrentGameManager->GetScore() << std::endl;
         if (CurrentGameManager->IsGameRunning()) std::cout << "Press Q to Quit." << std::endl;
     }

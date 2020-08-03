@@ -1,7 +1,10 @@
 ﻿#include "../Headers/World.h"
 
 
+
+#include <conio.h>
 #include <ctime>
+#include <windows.h>
 
 #include "../Headers/Camera.h"
 #include "../Headers/CollisionWorld.h"
@@ -68,11 +71,12 @@ void World::GarbageCollect()
 void World::Run(const int InFrameRate)
 {
     InputComponent.ClearInput();
-    const auto Delay = 1 / InFrameRate;
+    const auto Delay = 1000.0 / static_cast<double>(InFrameRate);
     const auto Start = time(nullptr);
 
+    Sleep(Delay);
     do InputComponent.AcceptInput();
-    while (time(nullptr) - Start < Delay);
+    while (_kbhit());
 
     PreCollisionTick();
     CollisionWorldComponent.Run();
